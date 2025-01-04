@@ -92,7 +92,7 @@ background and pose for attribute condition.
 1. Download the utils that will be used for cropping and parsing the face from [OneDrive](https://unioulu-my.sharepoint.com/:u:/g/personal/mwei23_univ_yo_oulu_fi/EVASuyMAoSJKrEqiTmwouKEB65bb4xAjuKkVervBrXNbHA?e=HoGghH).
 Unzip it, take out the files and put them under the `utils` directory. 
 2. Crop your image into the resolution of 512 $\times$ 512. Please provide
-the image including more than one face, otherwise it will result in an error.
+the image including at least one face, otherwise it will result in an error.
 ```console
 cd utils
 python preprocess.py --img_path <your-image-path> --save_path <your-save-path>
@@ -103,7 +103,7 @@ python preprocess.py --img_path <your-image-path> --save_path <your-save-path>
 ```console
 python retrieve_bg.py --img_path <your-cropped-path> --save_path <your-save-path>
 ```
-4. Use the inference.py script introduced above to test your image.
+4. Use the `inference.py` script introduced above to test your image.
 ### Issues or Questions?
 If the issue is code-related, please open an issue here.
 
