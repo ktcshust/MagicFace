@@ -1,7 +1,7 @@
 # MagicFace
 Official implementation of MagicFace
 
-> **MagicFace: High-Fidelity Facial Expression Editing with Action-Unit Control** [[arXiv paper]()]<br>
+> **MagicFace: High-Fidelity Facial Expression Editing with Action-Unit Control** [[arXiv paper](http://arxiv.org/abs/2501.02260)]<br>
 > Mengting Wei, Tuomas Varanka, Xingxun Jiang, Huai-Qian Khor, Guoying Zhao<br>
 > University of Oulu
 
