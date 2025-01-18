@@ -87,8 +87,20 @@ python inference.py --img_path './test_images/00381.png' --bg_path './test_image
 If you want to edit your own images, you need to compute the 
 background and pose for attribute condition.
 
-1. Download the utils that will be used for cropping and parsing the face from [OneDrive](https://unioulu-my.sharepoint.com/:u:/g/personal/mwei23_univ_yo_oulu_fi/EVASuyMAoSJKrEqiTmwouKEB65bb4xAjuKkVervBrXNbHA?e=HoGghH).
-Unzip it, take out the files and put them under the `utils` directory. 
+1. Check if you have downloaded all required files and saved in the ``utils`` directory. It should be 
+like this:
+
+```
+utils
+    79999_iter.pth
+    third_party
+        ...
+    third_party_files
+        ...
+    checkpoints
+        ...
+```
+
 2. Crop your image into the resolution of 512 $\times$ 512. Please provide
 the image including at least one face, otherwise it will result in an error.
 ```console
