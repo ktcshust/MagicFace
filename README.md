@@ -40,7 +40,6 @@ pip install -r requirements.txt
 
 You can directly retrieve our model from [HuggingFace](https://huggingface.co/mengtingwei/magicface/tree/main).
 
-> The first time testing the download from Hugging Face may take a lot of time. 
 
 Or download using python script:
 
@@ -61,7 +60,7 @@ snapshot_download(repo_id="mengtingwei/magicface", local_dir="./")
 You can test our model by editing the images we provided. Model inference needs an identity image
 to edit, a background image for attribute condition and an AU condition. 
 
-
+> This script will directly download model by model cards of Huggingface, so first time testing the download may take a lot of time. 
 
 * Test the model:
 
