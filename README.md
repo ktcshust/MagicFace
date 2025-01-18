@@ -36,6 +36,24 @@ pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https
 pip install -r requirements.txt
 ```
 
+### Download Models
+
+You can directly retrieve our model from [HuggingFace](https://huggingface.co/mengtingwei/magicface/tree/main).
+
+> The first time testing the download from Hugging Face may take a lot of time. 
+
+Download using python script:
+
+```python
+# Download a specific file
+from huggingface_hub import hf_hub_download
+hf_hub_download(repo_id="mengtingwei/magicface", filename="weights/checkpoints", local_dir="./utils")
+# Download all files 
+from huggingface_hub import snapshot_download
+snapshot_download(repo_id="mengtingwei/magicface", local_dir="./")
+```
+
+
 ### Usage
 
 #### Using our examples
@@ -43,10 +61,7 @@ pip install -r requirements.txt
 You can test our model by editing the images we provided. Model inference needs an identity image
 to edit, a background image for attribute condition and an AU condition. 
 
-You can directly retrieve our model from HuggingFace.
 
-> The first time testing the download from Hugging Face may take a lot of time. The cache for the model download is 
-> stored in the current directory of the project.
 
 * Test the model:
 
