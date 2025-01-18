@@ -60,7 +60,7 @@ snapshot_download(repo_id="mengtingwei/magicface", local_dir="./")
 You can test our model by editing the images we provided. Model inference needs an identity image
 to edit, a background image for attribute condition and an AU condition. 
 
-> This script will directly download the model by the model cards of Huggingface, so first time testing the download may take a lot of time. 
+> This script will directly download the model by the model cards of Huggingface, so the first time testing the download may take a lot of time. 
 
 * Test the model:
 
