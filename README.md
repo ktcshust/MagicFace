@@ -47,7 +47,7 @@ Download using python script:
 ```python
 # Download a specific file
 from huggingface_hub import hf_hub_download
-hf_hub_download(repo_id="mengtingwei/magicface", filename="weights/checkpoints", local_dir="./utils")
+hf_hub_download(repo_id="mengtingwei/magicface", filename="79999_iter.pth", local_dir="./utils")
 # Download all files 
 from huggingface_hub import snapshot_download
 snapshot_download(repo_id="mengtingwei/magicface", local_dir="./")
