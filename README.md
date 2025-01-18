@@ -42,7 +42,7 @@ You can directly retrieve our model from [HuggingFace](https://huggingface.co/me
 
 > The first time testing the download from Hugging Face may take a lot of time. 
 
-Download using python script:
+Or download using python script:
 
 ```python
 # Download a specific file
