@@ -17,12 +17,14 @@ from mgface.pipelines_mgface.pipeline_mgface import MgPipeline as MgPipelineInfe
 from mgface.pipelines_mgface.unet_ID_2d_condition import UNetID2DConditionModel
 from mgface.pipelines_mgface.unet_deno_2d_condition import UNetDeno2DConditionModel
 
-
-ind_dict = {1:0, 2:1, 4:2, 5:3, 6:4, 9:5, 12:6, 15:7, 17:8, 20:9, 25:10, 26:11}
+# AU mapping
+ind_dict = {'AU1':0, 'AU2':1, 'AU4':2, 'AU5':3, 'AU6':4, 'AU9':5,
+            'AU12':6, 'AU15':7, 'AU17':8, 'AU20':9, 'AU25':10, 'AU26':11}
 
 def parse_args(input_args=None):
     parser = argparse.ArgumentParser(description="Simple example of a MagicFace test script.")
-
+    # /home/mengting/Desktop/diffusion_models/stable-diffusion-v1-5
+    # sd-legacy/stable-diffusion-v1-5
     parser.add_argument(
         "--pretrained_model_name_or_path",
         type=str,
@@ -57,13 +59,13 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--denoising_unet_path",
         type=str,
-        default='./pre_trained/denoising_unet/checkpoint-100000',
+        default='mengtingwei/magicface',
     )
     
     parser.add_argument(
         "--ID_unet_path",
         type=str,
-        default='./pre_trained/ID_enc/checkpoint-100000',
+        default='mengtingwei/magicface',
     )
 
     parser.add_argument(
@@ -140,33 +142,40 @@ def main(args):
 
     vae = AutoencoderKL.from_pretrained(
             args.pretrained_model_name_or_path,
-            subfolder="vae"
+            subfolder="vae",
+            cache_dir='./'
         ).to(device)
     text_encoder = CLIPTextModel.from_pretrained(
             args.pretrained_model_name_or_path,
             subfolder="text_encoder",
+        cache_dir='./'
         ).to(device)
 
     tokenizer = CLIPTokenizer.from_pretrained(
             args.pretrained_model_name_or_path,
             subfolder="tokenizer",
+        cache_dir='./'
         )
 
     unet_ID = UNetID2DConditionModel.from_pretrained(
             ID_unet_path,
+            subfolder='ID_enc',
             # torch_dtype=torch.float16,
             use_safetensors=True,
             low_cpu_mem_usage=False,
-            ignore_mismatched_sizes=True
+            ignore_mismatched_sizes=True,
+            cache_dir='./',
         )
 
     # 
     unet_deno = UNetDeno2DConditionModel.from_pretrained(
             denoising_unet_path,
+            subfolder='denoising_unet',
             # torch_dtype=torch.float16,
             use_safetensors=True,
             low_cpu_mem_usage=False,
-            ignore_mismatched_sizes=True
+            ignore_mismatched_sizes=True,
+        cache_dir='./',
         )
 
     unet_deno.requires_grad_(False)
@@ -212,7 +221,7 @@ def main(args):
 
     if '+' not in au_test_file:
         print('you are testing editing with a single AU')
-        tgt_au_ind = int(au_test_file)
+        tgt_au_ind = au_test_file
         au_change = int(AU_variation)
         au_prompt[ind_dict[tgt_au_ind]] = au_change
     else:
@@ -221,7 +230,7 @@ def main(args):
         AU_variation = AU_variation.split('+')
 
         for item1, item2 in zip(au_test_file, AU_variation):
-            tgt_au_ind = int(item1)
+            tgt_au_ind = item1
             au_prompt[ind_dict[tgt_au_ind]] = item2
     
     print(au_prompt)

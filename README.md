@@ -43,32 +43,12 @@ pip install -r requirements.txt
 You can test our model by editing the images we provided. Model inference needs an identity image
 to edit, a background image for attribute condition and an AU condition. 
 
-1. First, download the pre-trained weights of the denoising UNet from [OneDrive](https://unioulu-my.sharepoint.com/:u:/g/personal/mwei23_univ_yo_oulu_fi/Ee674DGMLF1Lsh_UZtPOaBgBlIfYuylsxtF_vsSRGjHxzQ?e=1t6quP)
-and that of the ID encoder from [OneDrive](https://unioulu-my.sharepoint.com/:u:/g/personal/mwei23_univ_yo_oulu_fi/ETpI7WscliBAj7KK7qFlXvcBmS3f4qn3RCIYU6oj7-erpg?e=FnPLrS).
+You can directly retrieve our model from HuggingFace.
 
-```console
-mkdir pre_trained
-cd pre_trained
-mkdir denoising_unet
-mkdir ID_enc
-```
+> The first time testing the download from Hugging Face may take a lot of time. The cache for the model download is 
+> stored in the current directory of the project.
 
-Place the downloaded files in the appropriate directory and then unzip them. The structure of
-the directory for pre_trained should be like
-
-```commandline
-pre_trained/
-   denoising_unet/
-       checkpoint-100000/ 
-            diffusion_pytorch_model.safetensors
-            config.json
-   ID_enc/
-       checkpoint-100000/ 
-            diffusion_pytorch_model.safetensors
-            config.json
-```
-
-2. Test the model:
+* Test the model:
 
 ```--au_test``` The AUs you want to modify for the face. We provide 12 editable AUs here.
 They are _AU1, AU2, AU4, AU5, AU6, AU9, AU12, AU15, AU17, AU20, AU25, AU26_. Only provide the AUs 
@@ -77,12 +57,15 @@ edit AU1 and AU4. If only one AU is intended to change, just provide that one.
 
 ```--AU_variation```  Intensity integers you want to edit for each AU you specified. Also split them by ``+`` 
 if multiple AUs are intended to change. We recommend to limit the intensity 
-in the range of [-8, 8]. Integers outside this range may experience severe distortion.
+in the range of [-10, 10]. Integers outside this range may experience severe distortion.
+
 
 
 ```console
-python inference.py --img_path './test_images/00381.png' --bg_path './test_images/00381_bg.png' --au_test '4+1' --AU_variation '4+2'
+python inference.py --img_path './test_images/00381.png' --bg_path './test_images/00381_bg.png' --au_test 'AU4+AU1' --AU_variation '4+2'
 ```
+
+
 
 #### Test your own images
 
