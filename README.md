@@ -16,9 +16,7 @@ into a denoising UNet, our model can animate arbitrary identities
 with various AU combinations, yielding superior results in high-fidelity expression editing compared to other facial expression
 editing works.
 
-<p align="center">
-  <img src="assets/demo.jpg" />
-</p>
+![](./assets/demo.jpg)
 
 
 ### Dependencies
