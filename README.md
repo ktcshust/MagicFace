@@ -17,8 +17,9 @@ with various AU combinations, yielding superior results in high-fidelity express
 editing works.
 
 <p align="center">
-  <img src="./assets/demo.jpg" />
+  <img src="assets/demo.jpg" />
 </p>
+
 
 ### Dependencies
 
