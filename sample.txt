@@ -1,0 +1,1 @@
+python magicinference.py --img_path './test_images/00381.png' --au_test 'AU4+AU1' --AU_variation '4+2'
