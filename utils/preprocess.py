@@ -13,8 +13,7 @@ pil2tensor = transforms.Compose([transforms.ToTensor(), transforms.Resize(512)])
 
 pil2tensor = transforms.ToTensor()
 
-app = FaceAnalysis(name='antelopev2', root=os.path.join('./',
-                                                        'third_party_files'),
+app = FaceAnalysis(name='antelopev2', root=os.path.join('.', 'utils', 'third_party_files'),
                        providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
