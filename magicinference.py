@@ -30,61 +30,34 @@ def parse_args(input_args=None):
     parser = argparse.ArgumentParser(
         description="Optimized MagicFace inference with mixed precision and memory-saving techniques"
     )
-    parser.add_argument(
-        "--pretrained_model_name_or_path",
-        type=str,
-        default='sd-legacy/stable-diffusion-v1-5',
-        help="Path or HF identifier of pretrained SD model",
-    )
-    parser.add_argument(
-        "--revision", type=str, default=None,
-        help="Revision of pretrained model"
-    )
-    parser.add_argument(
-        "--variant", type=str, default=None,
-        help="Variant (e.g. fp16)"
-    )
-    parser.add_argument(
-        "--seed", type=int, default=424,
-        help="Random seed for reproducibility"
-    )
-    parser.add_argument(
-        "--inference_steps", type=int, default=40,
-        help="Number of denoising steps (reduce to save memory)"
-    )
-    parser.add_argument(
-        "--denoising_unet_path", type=str,
-        default='mengtingwei/magicface',
-        help="Path to denoising UNet"
-    )
-    parser.add_argument(
-        "--ID_unet_path", type=str,
-        default='mengtingwei/magicface',
-        help="Path to ID UNet"
-    )
-    parser.add_argument(
-        "--au_test", type=str, default='',
-        help="One or multiple AUs to test, e.g. 'AU12' or 'AU1+AU12'"
-    )
-    parser.add_argument(
-        "--AU_variation", type=str, default='',
-        help="Variation values, e.g. '10' or '5+8'"
-    )
-    parser.add_argument(
-        "--img_path", type=str, required=True,
-        help="Path to input image"
-    )
-    parser.add_argument(
-        "--saved_path", type=str, default='edited_images',
-        help="Directory to save edited outputs"
-    )
+    parser.add_argument("--pretrained_model_name_or_path", type=str,
+                        default='sd-legacy/stable-diffusion-v1-5',
+                        help="Path or HF identifier of pretrained SD model")
+    parser.add_argument("--revision", type=str, default=None,
+                        help="Revision of pretrained model")
+    parser.add_argument("--variant", type=str, default=None,
+                        help="Variant (e.g. fp16)")
+    parser.add_argument("--seed", type=int, default=424,
+                        help="Random seed for reproducibility")
+    parser.add_argument("--inference_steps", type=int, default=40,
+                        help="Number of denoising steps (reduce to save memory)")
+    parser.add_argument("--denoising_unet_path", type=str,
+                        default='mengtingwei/magicface',
+                        help="Path to denoising UNet")
+    parser.add_argument("--ID_unet_path", type=str,
+                        default='mengtingwei/magicface',
+                        help="Path to ID UNet")
+    parser.add_argument("--au_test", type=str, default='',
+                        help="One or multiple AUs to test, e.g. 'AU12' or 'AU1+AU12'")
+    parser.add_argument("--AU_variation", type=str, default='',
+                        help="Variation values, e.g. '10' or '5+8'")
+    parser.add_argument("--img_path", type=str, required=True,
+                        help="Path to input image")
+    parser.add_argument("--saved_path", type=str, default='edited_images',
+                        help="Directory to save edited outputs")
     return parser.parse_args(input_args)
 
-
 def make_data(img_path):
-    """
-    Load source and generate background-only tensor from input image.
-    """
     transform = transforms.ToTensor()
     img = Image.open(img_path).convert("RGBA")
     source = transform(img)
@@ -96,7 +69,6 @@ def make_data(img_path):
     bg_tensor = transform(bg)
     return source, bg_tensor
 
-
 def tokenize_captions(tokenizer, captions):
     inputs = tokenizer(
         captions,
@@ -107,7 +79,6 @@ def tokenize_captions(tokenizer, captions):
     )
     return inputs.input_ids
 
-
 def main(args):
     # Device & dtype
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -116,7 +87,7 @@ def main(args):
     # Set seed
     generator = torch.Generator(device=device).manual_seed(args.seed)
 
-    # Load VAE and CLIP models
+    # Load VAE and CLIP models in float16 → tiết kiệm VRAM
     vae = AutoencoderKL.from_pretrained(
         args.pretrained_model_name_or_path,
         subfolder="vae",
@@ -134,7 +105,7 @@ def main(args):
         subfolder="tokenizer",
     )
 
-    # Load custom UNets
+    # Load custom UNets với low_cpu_mem_usage + float16
     unet_ID = UNetID2DConditionModel.from_pretrained(
         args.ID_unet_path,
         subfolder='ID_enc',
@@ -152,7 +123,7 @@ def main(args):
         ignore_mismatched_sizes=True
     ).to(device)
 
-    # Freeze weights
+    # Freeze weights to tiết kiệm thêm
     for module in [vae, text_encoder, unet_ID, unet_deno]:
         module.requires_grad_(False)
 
@@ -171,33 +142,33 @@ def main(args):
         low_cpu_mem_usage=True
     ).to(device)
 
-    # Replace scheduler if needed
+    # Scheduler
     pipeline.scheduler = UniPCMultistepScheduler.from_config(pipeline.scheduler.config)
 
-    # Memory optimizations
-    pipeline.enable_attention_slicing()
+    # --- Memory optimizations ---
+    pipeline.enable_attention_slicing()             # chia nhỏ attention
     try:
-        pipeline.enable_xformers_memory_efficient_attention()
-    except Exception:
+        pipeline.enable_xformers_memory_efficient_attention()  # nếu cài xformers
+    except:
         pass
     try:
-        pipeline.enable_sequential_cpu_offload()
-    except Exception:
+        pipeline.enable_sequential_cpu_offload()    # offload module lớn sang CPU
+    except:
         pass
     pipeline.set_progress_bar_config(disable=True)
 
-    # Prepare data
+    # Chuẩn bị data
     source, bg = make_data(args.img_path)
     source = source.unsqueeze(0).to(device, dtype=weight_dtype)
-    bg = bg.unsqueeze(0).to(device, dtype=weight_dtype)
+    bg     = bg.unsqueeze(0).to(device, dtype=weight_dtype)
 
-    # Text embeddings
+    # Tạo embedding text
     prompt = "A close up of a person."
     prompt_ids = tokenize_captions(tokenizer, [prompt]).to(device)
     with torch.no_grad():
         prompt_embeds = text_encoder(prompt_ids)[0]
 
-    # AU vector
+    # Tạo vector AU
     au_prompt = np.zeros((12,), dtype=np.float32)
     if '+' in args.au_test:
         aus = args.au_test.split('+')
@@ -208,11 +179,11 @@ def main(args):
         au_prompt[dict_AU_index[args.au_test]] = float(args.AU_variation)
     tor_au = torch.from_numpy(au_prompt).unsqueeze(0).to(device)
 
-    # Inference
+    # Inference với mixed-precision
     os.makedirs(args.saved_path, exist_ok=True)
     img_name = os.path.basename(args.img_path)
     with torch.no_grad():
-        with autocast(device_type=device, dtype=torch.float16):
+        with autocast(device_type="cuda", dtype=torch.float16):
             sample = pipeline(
                 prompt_embeds=prompt_embeds,
                 source=source,
@@ -222,14 +193,14 @@ def main(args):
                 generator=generator
             ).images[0]
 
+    # Lưu kết quả
     out_path = os.path.join(args.saved_path, img_name)
     sample.save(out_path)
     print(f"Saved edited image to {out_path}")
 
-    # Free memory
+    # Dọn dẹp bộ nhớ
     torch.cuda.empty_cache()
     gc.collect()
-
 
 if __name__ == "__main__":
     args = parse_args()
