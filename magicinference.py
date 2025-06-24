@@ -1,3 +1,7 @@
+import huggingface_hub
+# map cached_download → hf_hub_download để diffusers import không lỗi
+huggingface_hub.cached_download = huggingface_hub.hf_hub_download
+
 import argparse
 import os
 import gc
