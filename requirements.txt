@@ -11,11 +11,10 @@ scipy==1.15.0
 torch
 torchvision
 tqdm==4.67.1
-transformers>=4.47.0
+transformers==4.42.4
 huggingface_hub==0.25.0
 onnxruntime==1.17.3
 rembg
 accelerate
-peft==0.15.2
 
 
