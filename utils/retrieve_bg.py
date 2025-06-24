@@ -19,8 +19,8 @@ from torchvision.utils import save_image
 
 
 device = 'cuda'
-checkpoint = './checkpoints'
-app = FaceAnalysis(name='antelopev2', root=os.path.join('./',
+checkpoint = './utils/checkpoints'
+app = FaceAnalysis(name='antelopev2', root=os.path.join('.', 'utils',
                                                         'third_party_files'),
                        providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
 app.prepare(ctx_id=0, det_size=(640, 640))
@@ -29,7 +29,7 @@ app.prepare(ctx_id=0, det_size=(640, 640))
 n_classes = 19
 net = BiSeNet(n_classes=n_classes)
 net.cuda()
-model_pth = '79999_iter.pth'
+model_pth = 'utils/79999_iter.pth'
 net.load_state_dict(torch.load(model_pth))
 net.eval()
 
