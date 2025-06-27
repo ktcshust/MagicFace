@@ -1,0 +1,52 @@
+[
+  {
+    "emotion": "happiness",
+    "au_test": "AU6+AU12",
+    "au_variation": "2+2"
+  },
+  {
+    "emotion": "sadness",
+    "au_test": "AU1+AU4+AU15",
+    "au_variation": "2+4+2"
+  },
+  {
+    "emotion": "anger",
+    "au_test": "AU4+AU5+AU7+AU23",
+    "au_variation": "4+2+2+2"
+  },
+  {
+    "emotion": "fear",
+    "au_test": "AU1+AU2+AU4+AU5+AU20",
+    "au_variation": "2+2+2+2+2"
+  },
+  {
+    "emotion": "surprise",
+    "au_test": "AU1+AU2+AU5+AU26",
+    "au_variation": "2+2+2+2"
+  },
+  {
+    "emotion": "disgust",
+    "au_test": "AU9+AU15+AU16",
+    "au_variation": "2+2+2"
+  },
+  {
+    "emotion": "contempt",
+    "au_test": "AU12+AU14",
+    "au_variation": "2+2"
+  },
+  {
+    "emotion": "neutral",
+    "au_test": "",
+    "au_variation": ""
+  },
+  {
+    "emotion": "pride",
+    "au_test": "AU17+AU18",
+    "au_variation": "2+2"
+  },
+  {
+    "emotion": "shame",
+    "au_test": "AU1+AU4+AU15",
+    "au_variation": "2+2+2"
+  }
+]
